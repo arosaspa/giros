@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style>
+    body { font-family: Arial; background: #f8f9fa; padding: 30px; }
+    .container { max-width: 600px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    h1 { text-align: center; color: #2c3e50; }
+    input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #0069d9; }
+    button.success { background: #28a745; }
+    button.success:hover { background: #218838; }
+    a { display: inline-block; margin-top: 20px; text-align: center; color: #007bff; text-decoration: none; }
+    .success-message { background: #d4edda; color: #155724; padding: 15px; border-radius: 4px; margin: 15px 0; display: none; }
+    p { margin: 15px 0 5px 0; font-weight: bold; color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <img src="/Pictures/logo.png" alt="Logo" style="display:block; margin: 0 auto 20px; max-width:150px;">
+  <div class="container">
+    <h1>💸 Register Money Transfer Cotel</h1>
+    
+    <div id="successMessage" class="success-message"></div>
+    
+    <form id="transferForm">
+      <input type="text" id="refNumber" placeholder="Reference Number" required />
+      <input type="date" id="date" required />
+
+      <p>Sender</p>
+      <select id="postOfficeIn">
+        <option value="SPO">Selection Post Office Origin</option>
+        <option value="LTB">Las Tablas</option>
+        <option value="CHG">Changuinola</option>
+        <option value="CHP">Chepo</option>
+        <option value="DVD">David</option>
+        <option value="COL">Santiago</option>
+        <option value="CHO">Chorrera</option>
+      </select>
+      
+      <input type="text" id="senderName" placeholder="Sender Name" required />
+      <input type="text" id="senderId" placeholder="ID" required />
+      <input type="tel" id="senderPhone" placeholder="Mobile Number" required />
+      <input type="email" id="senderEmail" placeholder="you@example.com" required />
+      <input type="number" id="senderAmount" placeholder="Amount" step="0.01" min="0.01" required />
+      <select id="senderCurrency">
+        <option value="USD">USD  $</option>
+        <option value="EUR">EUR  €</option>
+        <option value="BIT">BIT  ₿</option>
+        <option value="RUP">INR  ₹</option>
+        <option value="CN¥">YUAN ¥</option>
+      </select>
+
+      <p>Recipient</p>
+      <select id="postOfficeOut">
+        <option value="SPO">Selection Post Office Destiny</option>
+        <option value="EDR">El Dorado</option>
+        <option value="CAL">Calidonia</option>
+        <option value="SAN">Santiago</option>
+        <option value="BOQ">Boquete</option>
+        <option value="CHA">Changuinola</option>
+      </select>
+      
+      <input type="text" id="receiverName" placeholder="Receiver Name" required />
+      <input type="text" id="receiverId" placeholder="ID" required />
+      <input type="tel" id="receiverPhone" placeholder="Mobile Number" required />
+      <input type="email" id="receiverEmail" placeholder="you@example.com" required />
+      <input type="number" id="receiverAmount" placeholder="Amount" step="0.01" min="0.01" required />
+
+      <select id="receiverCurrency">
+        <option value="USD">USD  $</option>
+        <option value="EUR">EUR  €</option>
+        <option value="BIT">BIT  ₿</option>
+        <option value="RUP">INR  ₹</option>
+        <option value="CN¥">YUAN ¥</option>
+      </select>
+
+      <button type="submit" id="submitBtn">Register Transfer</button>
+    </form>
+    
+    <a href="/selection.html">Back to Selection</a>
+  </div>
+
+  <script>
+    document.getElementById('transferForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const transferData = {
+        refNumber: document.getElementById('refNumber').value,
+        date: document.getElementById('date').value,
+        postOfficeIn: document.getElementById('postOfficeIn').value,
+        senderName: document.getElementById('senderName').value,
+        senderId: document.getElementById('senderId').value,
+        senderPhone: document.getElementById('senderPhone').value,
+        senderEmail: document.getElementById('senderEmail').value,
+        senderAmount: document.getElementById('senderAmount').value,
+        senderCurrency: document.getElementById('senderCurrency').value,
+        postOfficeOut: document.getElementById('postOfficeOut').value,
+        receiverName: document.getElementById('receiverName').value,
+        receiverId: document.getElementById('receiverId').value,
+        receiverPhone: document.getElementById('receiverPhone').value,
+        receiverEmail: document.getElementById('receiverEmail').value,
+        receiverAmount: document.getElementById('receiverAmount').value,
+        receiverCurrency: document.getElementById('receiverCurrency').value,
+        timestamp: new Date().toISOString()
+      };
+      
+      let transfers = JSON.parse(localStorage.getItem('cotelTransfers')) || [];
+      transfers.unshift(transferData);
+      localStorage.setItem('cotelTransfers', JSON.stringify(transfers));
+      
+      document.getElementById('successMessage').innerHTML = 
+        `✅ Transfer <strong>${transferData.refNumber}</strong> registered!`;
+      document.getElementById('successMessage').style.display = 'block';
+      document.getElementById('submitBtn').classList.add('success');
+      
+      setTimeout(() => {
+        window.location.href = 'data.html';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

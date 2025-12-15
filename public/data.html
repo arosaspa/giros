@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Money Transfers Records</title>
+  <style>
+    body { font-family: Arial; background: #f8f9fa; padding: 30px; }
+    .container { max-width: 1400px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+    .stats { background: #e9ecef; padding: 15px; border-radius: 4px; margin-bottom: 20px; text-align: center; font-size: 18px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+    th { background-color: #007bff; color: white; font-weight: bold; position: sticky; top: 0; }
+    .currency { font-weight: bold; color: #28a745; font-size: 14px; }
+    .empty { text-align: center; color: #999; font-style: italic; padding: 60px; font-size: 18px; }
+    button { background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; }
+    button:hover { background: #0069d9; }
+    a { color: #007bff; text-decoration: none; }
+    @media (max-width: 768px) { 
+      table { font-size: 11px; } 
+      th, td { padding: 5px; } 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💸 Money Transfers Records</h1>
+    
+    <div class="stats">
+      <strong>Total Records:</strong> <span id="totalCount">0</span> 
+      | <strong>Last Update:</strong> <span id="lastUpdate">-</span>
+    </div>
+    
+    <div id="tableContainer">
+      <div class="empty">📝 No transfers recorded yet. Use telegraphic.html to register your first transfer.</div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+      <button onclick="location.href='telegraphic.html'">➕ Register New Transfer</button>
+    </div>
+  </div>
+
+  <script>
+    function displayTransfers() {
+      const transfers = JSON.parse(localStorage.getItem('cotelTransfers')) || [];
+      const container = document.getElementById('tableContainer');
+      const totalCount = document.getElementById('totalCount');
+      const lastUpdate = document.getElementById('lastUpdate');
+      
+      totalCount.textContent = transfers.length;
+      lastUpdate.textContent = transfers.length > 0 ? 
+        new Date().toLocaleString() : 'Never';
+      
+      if (transfers.length === 0) {
+        container.innerHTML = '<div class="empty">📝 No transfers recorded yet. Use telegraphic.html to register your first transfer.</div>';
+        return;
+      }
+      
+      let tableRows = '';
+      transfers.forEach(transfer => {
+        tableRows += `
+          <tr>
+            <td><strong>${transfer.refNumber}</strong></td>
+            <td>${new Date(transfer.timestamp).toLocaleString()}</td>
+            <td>${transfer.postOfficeIn}</td>
+            <td>${transfer.senderName}</td>
+            <td>${transfer.senderId}</td>
+            <td>${transfer.senderPhone}</td>
+            <td>${transfer.senderEmail}</td>
+            <td><span class="currency">${transfer.senderAmount} ${transfer.senderCurrency}</span></td>
+            <td>${transfer.postOfficeOut}</td>
+            <td>${transfer.receiverName}</td>
+            <td>${transfer.receiverId}</td>
+            <td>${transfer.receiverPhone}</td>
+            <td>${transfer.receiverEmail}</td>
+            <td><span class="currency">${transfer.receiverAmount} ${transfer.receiverCurrency}</span></td>
+          </tr>
+        `;
+      });
+      
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Ref #</th>
+              <th>Date/Time</th>
+              <th>Origin</th>
+              <th>Sender</th>
+              <th>ID</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Amount</th>
+              <th>Destiny</th>
+              <th>Receiver</th>
+              <th>ID</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      `;
+    }
+    
+    // Load immediately and refresh every 3 seconds
+    displayTransfers();
+    setInterval(displayTransfers, 3000);
+  </script>
+</body>
+</html>
